@@ -56,11 +56,12 @@ public class Main {
         }
         return matchOutCome;
     }
-// for the initial test I will ust the Player class to print a dummy load as a result
+// for the initial test I will ust the Player class to print a dummy load as a resu
+    // todo if time allowes remove the hardcode requirement
     protected static void writeResultsToFile(List<Player> firstResults) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(Config.REPORT_FILE_PATH))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(Config.REPORT_FILE_PATH,true))) {
             for (Player player : firstResults) {
-                writer.printf("%s %s %s %s %s",
+                writer.printf("%s %s %s %s %s \n",
                         player.getPlayerId(),
                         player.getPlayerOperation(),
                         player.getMatchId(),
@@ -96,7 +97,6 @@ public class Main {
             System.out.println(outcome.getMatchResult());
 
         }
-
-
+        writeResultsToFile(playerTransactions);
     }
 }
