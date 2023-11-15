@@ -11,5 +11,15 @@ public class Match {
         this.rateOfReturnSideB = rateOfReturnSideB;
         this.matchResult = matchResult;
     }
+    //getters
+    protected String getMatchId(){
+        return matchId;
+    } protected String getRateOfReturnSideA(){
+        return rateOfReturnSideA;
+    } protected String getRateOfReturnSideB(){
+        return rateOfReturnSideB;
+    } protected String getMatchResult(){
+        return matchResult;
+    }
 
 }

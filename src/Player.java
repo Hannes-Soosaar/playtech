@@ -1,4 +1,6 @@
+//todo Rename the class
 class Player {
+
     private String playerId; //value is player ID – A random UUID.
     private String playerOperation; // One of 3 operations: DEPOSIT, BET, WITHDRAW.
     private String matchId;   // match Id – A random UUID. Can be null
@@ -14,8 +16,17 @@ class Player {
         this.transactionSum = transactionSum;
         this.betPlacement = betPlacement;
     }
+
+// getters
+    protected String getPlayerId(){
+        return playerId;
+    }   protected String getPlayerOperation(){
+        return playerOperation;
+    }   protected String getMatchId(){
+        return matchId;
+    }   protected String getTransactionSum(){
+        return transactionSum;
+    }   protected String getBetPlacement(){
+        return betPlacement;
+    }
 }
-
-
-
-
