@@ -1,4 +1,3 @@
-//todo Rename the class
 class PlayerData {
 
     private String playerId; //value is player ID – A random UUID.

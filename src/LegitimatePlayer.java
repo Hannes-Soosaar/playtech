@@ -2,21 +2,19 @@ import java.math.BigDecimal;
 
 public class LegitimatePlayer {
 
-    protected String playerID;
-    protected int playerBalance;
+    private String playerID;
+    private int playerBalance;
     //(wonGames/NumberOfBetsPlaced)
-    protected BigDecimal winRate;  //(won/numBetsPlaced)
+    private BigDecimal winRate;
     // a)In case of an illegitimate actions the account is deactivated all counts start
     // b) all counts start as active
-    protected boolean isActive;  // In case of an illegitimate actions the account is deactivated all counts start
-    // as active
-
-    public LegitimatePlayer(){
+    private boolean isActive;  // In case of an illegitimate actions the account is deactivated all counts start
+                                // as active
+    public LegitimatePlayer(String playerID, int playerBalance, BigDecimal winRate, boolean isActive){
         this.playerID = playerID;
         this.playerBalance = playerBalance;
         this.winRate = winRate;
         this.isActive =isActive;
-
     }
 
      // IDs followed with their final balance and their betting win rate (Win rate is calculated by number of won game
