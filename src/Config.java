@@ -18,4 +18,12 @@ public class Config {
     public static final int MATCH_RETURN_ON_B = 2;
     public static final int MATCH_RESULT = 3;
 
+    protected  static String  displayRunStatus(String messageToLog) {
+        if (Config.DISPLAY_LOG_STATUS) {
+            System.out.println(messageToLog);
+            // Add write to log.txt
+        }
+        return messageToLog;
+    }
+
 }

@@ -1,3 +1,6 @@
+// Operation is considered “illegal” if a player is trying to bet or withdraw more coins than they have on their
+// account.
+
 public class IllegitimatePlayers{
     private String playerId; //value is player ID – A random UUID.
     private String playerOperation; // One of 3 operations: DEPOSIT, BET, WITHDRAW.
@@ -36,10 +39,5 @@ public class IllegitimatePlayers{
     }
 
 
-
-
-    // o	The list is ordered by player ID.
-    // o	In case of WITHDRAW operation, empty values should be presented as “null”, e.g
-    // 4925ac98-833b-454b-9342-13ed3dfd3ccf WITHDRAW null 8093 null
 
 }

@@ -2,14 +2,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 public class Main {
-    // used static as there will only be one instance of reading in the data per program cycle
-    protected  static String  displayRunStatus(String messageToLog) {
-        if (Config.DISPLAY_LOG_STATUS) {
-            System.out.println(messageToLog);
-            // Add write to log.txt
-        }
-        return messageToLog;
-    }
     protected static List<PlayerData> readInPlayerData() {
         List<PlayerData> playerDataTransactions = new ArrayList<>();
         try (BufferedReader readInPlayerTransactions = new BufferedReader(new FileReader(Config.PLAYER_FILE_PATH))) {
@@ -40,7 +32,7 @@ public class Main {
             throw new RuntimeException(e);
 
         }
-        displayRunStatus("Read in of player transaction data from file: OK");
+       Config.displayRunStatus("Read in of player transaction data from file: OK");
         return playerDataTransactions;
     }
     protected static List<MatchData> readInMatchData() {
@@ -61,7 +53,7 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        displayRunStatus("Read in of match data from file: OK");
+        Config.displayRunStatus("Data read of match data from file: OK");
         return matchDataOutCome;
     }
 // for the initial test I will ust the Player class to print a dummy load as a resu
@@ -73,27 +65,28 @@ public class Main {
                         playerData.getPlayerId(),
                         playerData.getPlayerOperation(),
                         playerData.getMatchId(),
-                        playerData.getTransactionSum(),
+                        playerData.getTransactionAmount(),
                         playerData.getBetPlacement());
             }
-            writer.println("EMPTY LINE HERE NOTHING TO SEE"); // inputs an empty line when finished
+            writer.println(""); // inputs an empty line when finished
         }catch (IOException e) {
             e.printStackTrace(); //todo read up on what this does exactly
         }
-        displayRunStatus("Report written to file: OK");
+       Config.displayRunStatus(" Result written to file: OK");
     }
 
     public static void main(String[] args) {
 
         List<PlayerData> playerDataTransactions = readInPlayerData();
         List<MatchData> matchesOutcome = readInMatchData();
+        PlayerAccount.initializeAccounts(playerDataTransactions); // Initialize accounts read form PlayerData
 
         // to test if  I have access to all data in the player_data.txt file
         for (PlayerData playerData : playerDataTransactions) {
             System.out.print(playerData.getPlayerId() + " ");
             System.out.print(playerData.getPlayerOperation() + " ");
             System.out.print(playerData.getMatchId() + " ");
-            System.out.print(playerData.getTransactionSum() + " ");
+            System.out.print(playerData.getTransactionAmount() + " ");
             System.out.println(playerData.getBetPlacement() + " ");
         }
 // to test if I have access to all data in the match_data.txt file
