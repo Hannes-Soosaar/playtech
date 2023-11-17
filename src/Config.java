@@ -1,4 +1,6 @@
 public class Config {
+    // Toggle on of the console log
+    public static boolean DISPLAY_LOG_STATUS = true;
 
     // The path for the files used, if the files need to be placed elsewhere the path should be changed to match
     public static final String PLAYER_FILE_PATH = "./src/player_data.txt";
@@ -15,4 +17,5 @@ public class Config {
     public static final int MATCH_RETURN_ON_A = 1;
     public static final int MATCH_RETURN_ON_B = 2;
     public static final int MATCH_RESULT = 3;
+
 }

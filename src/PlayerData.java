@@ -1,5 +1,5 @@
 //todo Rename the class
-class Player {
+class PlayerData {
 
     private String playerId; //value is player ID – A random UUID.
     private String playerOperation; // One of 3 operations: DEPOSIT, BET, WITHDRAW.
@@ -8,8 +8,8 @@ class Player {
     private String betPlacement; // the side of the match the player places the bet on value can be either A or B
 
     // Constructs the PlayerTransaction object
-    public Player(String playerId, String playerOperation, String matchId, String transactionSum,
-                  String betPlacement) {
+    public PlayerData(String playerId, String playerOperation, String matchId, String transactionSum,
+                      String betPlacement) {
         this.playerId = playerId;
         this.playerOperation = playerOperation;
         this.matchId = matchId;
@@ -17,16 +17,24 @@ class Player {
         this.betPlacement = betPlacement;
     }
 
-// getters
-    protected String getPlayerId(){
+    // getters
+    protected String getPlayerId() {
         return playerId;
-    }   protected String getPlayerOperation(){
+    }
+
+    protected String getPlayerOperation() {
         return playerOperation;
-    }   protected String getMatchId(){
+    }
+
+    protected String getMatchId() {
         return matchId;
-    }   protected String getTransactionSum(){
+    }
+
+    protected String getTransactionSum() {
         return transactionSum;
-    }   protected String getBetPlacement(){
+    }
+
+    protected String getBetPlacement() {
         return betPlacement;
     }
 }
