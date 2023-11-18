@@ -13,18 +13,16 @@ public class Transform {
             switch (playerOperation) {
 
                 case "BET":
-                    //todo add logic for counting the bet check if bet is valid meaning enough cash and that
-                    // player is active
-                    String matchId = playerData.getMatchId();
-                    String betPlacement = playerData.getBetPlacement();
-                    System.out.printf("A bet was made on: %s in the amount of :%d matchID:%s\n", betPlacement,
-                            transactionAmount, matchId);
+                    if (isValidBet(playerAccounts, transactionAmount, playerId)) {
+                        processBet(playerAccounts, matchData, playerData);
+                    } else {
+                        IllegitimatePlayers.addIllegitimatePlayer(playerData);
+                    }
                     break;
                 case "WITHDRAW":
-                        withdrawFromPlayerAccount(playerAccounts,playerData);
+                    withdrawFromPlayerAccount(playerAccounts, playerData);
                     break;
                 case "DEPOSIT":
-                    System.out.println("A deposit was made");
                     depositToPlayerAccount(playerAccounts, playerId, transactionAmount);
                     break;
                 default:
@@ -35,7 +33,8 @@ public class Transform {
         }
     }
 
-    public void depositToPlayerAccount(List<PlayerAccount> playerAccountList, String playerId, int transactionAmount) {
+    public void depositToPlayerAccount(List<PlayerAccount> playerAccountList, String playerId,
+                                       int transactionAmount) {
         for (PlayerAccount playerAccount : playerAccountList) {
             if (playerAccount.getPlayerId().equals(playerId)) {
                 playerAccount.updateBalance(transactionAmount);
@@ -43,48 +42,89 @@ public class Transform {
         }
     }
 
-    public void withdrawFromPlayerAccount(List<PlayerAccount> playerAccountList, PlayerData playerData) {
-        for (PlayerAccount playerAccount:playerAccountList){
-            if (playerAccount.getPlayerId().equals(playerData.getPlayerId()) && playerAccount.getIsActive()
-                    && playerAccount.getPlayerBalance() >= playerData.getTransactionAmount() ){
+    public void withdrawFromPlayerAccount(List<PlayerAccount> playerAccountList,
+                                          PlayerData playerData) {
+        for (PlayerAccount playerAccount : playerAccountList) {
+            if (playerAccount.getPlayerId().equals(playerData.getPlayerId())
+                    && playerAccount.getIsActive()
+                    && playerAccount.getPlayerBalance() >= playerData.getTransactionAmount()) {
                 playerAccount.updateBalance(-playerData.getTransactionAmount());
-            }else if (playerAccount.getPlayerId().equals(playerData.getPlayerId()) && playerAccount.getIsActive()
-                    && playerAccount.getPlayerBalance() < playerData.getTransactionAmount() ){
+            } else if (playerAccount.getPlayerId().equals(playerData.getPlayerId())
+                    && playerAccount.getIsActive()
+                    && playerAccount.getPlayerBalance() < playerData.getTransactionAmount()) {
                 playerAccount.setPlayerToInactive();
                 IllegitimatePlayers.addIllegitimatePlayer(playerData);
             }
         }
+    }
 
+    public boolean isValidBet(List<PlayerAccount> playerAccountList, int transactionAmount, String playerId) {
+
+        for (PlayerAccount playerAccount : playerAccountList) {
+            if (playerAccount.getPlayerId().equals(playerId) &&
+                    playerAccount.getPlayerBalance() > transactionAmount &&
+                    playerAccount.getIsActive()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void processBet(List<PlayerAccount> playerAccountList, List<MatchData> matchDataList, PlayerData playerData) {
+        MatchData match = findMatch(matchDataList, playerData);
+        PlayerAccount playerAccount = findPlayerAccount(playerData.getPlayerId(), playerAccountList);
+        updateBalances(playerAccount, match, playerData);
+    }
+
+    public MatchData findMatch(List<MatchData> matchDataList, PlayerData playerData) {
+        for (MatchData matchData : matchDataList) {
+            if (matchData.getMatchId().equals(playerData.getMatchId())) {
+                return matchData;
+            }
+        }
+        return null;  // todo handle the error.
+    }
+
+    public PlayerAccount findPlayerAccount(String playerId, List<PlayerAccount> playerAccountList) {
+        for (PlayerAccount playerAccount : playerAccountList) {
+            if (playerAccount.getPlayerId().equals(playerId)) {
+                return playerAccount;
+            }
+        }
+        return null; // todo handle the error
+    }
+
+    public void updateBalances(PlayerAccount playerAccount, MatchData match, PlayerData playerData) {
+        switch (match.getMatchResult()) { //todo the data type is wrong for the return rate
+            case "A":
+                if (playerData.getBetPlacement().equals("A")) {
+                    playerAccount.updateBalance(
+                            (int) Math.floor(match.getRateOfReturnSideA() * (double) playerData.getTransactionAmount())
+                    );
+                } else {
+                    playerAccount.updateBalance(-playerData.getTransactionAmount());
+                }
+                break;
+            case "B":
+                if (playerData.getBetPlacement().equals("B")) {
+                    playerAccount.updateBalance(
+                            (int) Math.floor(match.getRateOfReturnSideB() * (double) playerData.getTransactionAmount())
+                    );
+                } else {
+                    playerAccount.updateBalance(-playerData.getTransactionAmount());
+                }
+                break;
+            case "DRAW":
+                playerAccount.updateBalance(playerData.getTransactionAmount());
+                break;
+            default:
+                // todo handle any other case
+                break;
+        }
+
+        playerAccount.addABetPlaced();
     }
 
 
-    // if the operation is Withdraw check if there is enough funds for the withdraw if yes.. subtract the
-    // ammount from the playe
-    // if the operation is Deposit add the amount to the player
-
-
-//    protected List<LegitimatePlayer> getLegitPlayerTransactions(List<PlayerData> playerData,
-//                                                                List<IllegitimatePlayers> illegitimatePlayers,
-//                                                                List<MatchData> matchData ) {
-//
-//        // Need a temporary list to store player transactions when summarizing them
-//
-//
-//        return null; // todo change back from null
-//    }
-
-//    protected Map<String,Integer> getSumOfTransactions(List<PlayerData> playerDataList) {
-//
-//        Map<String,Integer> playerAccountBalance = new HashMap<>();
-//
-//        for(PlayerData playerData: playerDataList){
-//                String playerId = playerData.getPlayerId();
-//                String playerOperation  =playerData.getPlayerOperation();
-//                int transactionAmount = Integer.parseInt(playerData.getTransactionAmount());
-//        }
-//
-//
-//
-//        return Map<>;
-//    }
 }
+

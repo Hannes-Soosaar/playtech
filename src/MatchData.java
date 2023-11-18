@@ -17,12 +17,13 @@ public class MatchData {
         return matchId;
     }
 
-    protected String getRateOfReturnSideA() {
-        return rateOfReturnSideA;
+    protected double getRateOfReturnSideA() {
+
+        return Double.parseDouble(rateOfReturnSideA);
     }
 
-    protected String getRateOfReturnSideB() {
-        return rateOfReturnSideB;
+    protected double getRateOfReturnSideB() {
+        return Double.parseDouble(rateOfReturnSideB);
     }
 
     protected String getMatchResult() {

@@ -12,6 +12,7 @@ public class PlayerAccount {
     private BigDecimal winRate;
     private boolean isActive;  // In case of an illegitimate action
 
+
     // s the account is deactivated all counts start
     // as active
     public PlayerAccount(String playerID, int betsPlaced, int playerBalance, BigDecimal winRate, boolean isActive) {
@@ -26,12 +27,16 @@ public class PlayerAccount {
         this.playerBalance += amount;
     }
 
-    protected void updateWinRate(BigDecimal updatedWinRate) {
-        this.winRate = winRate;
+    protected void setWinRate(BigDecimal updatedWinRate) {
+        this.winRate = updatedWinRate;
     }
 
     protected void setPlayerToInactive(){
         isActive=false;
+    }
+
+    protected void addABetPlaced(){
+         betsPlaced++;
     }
 
     protected long getPlayerBalance(){
@@ -51,7 +56,6 @@ public class PlayerAccount {
     }
 
     protected BigDecimal getWinRate(){
-        BigDecimal.
         return winRate.setScale(2, RoundingMode.DOWN);
     }
 

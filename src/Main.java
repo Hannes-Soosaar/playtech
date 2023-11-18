@@ -39,7 +39,7 @@ public class Main {
     }
 
     protected static List<MatchData> readInMatchData() {
-        List<MatchData> matchDataOutCome = new ArrayList<>();
+        List<MatchData> matchOutcome = new ArrayList<>();
         try (BufferedReader readInMatchOutComes = new BufferedReader(new FileReader(Config.MATCH_FILE_PATH))) {
             String matchOutComesBuffer;
             while ((matchOutComesBuffer = readInMatchOutComes.readLine()) != null) {
@@ -51,17 +51,17 @@ public class Main {
                         matchDetails[Config.MATCH_RETURN_ON_B],
                         matchDetails[Config.MATCH_RESULT]
                 );
-                matchDataOutCome.add(outcome);
+                matchOutcome.add(outcome);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         Config.displayRunStatus("Data read of match data from file: OK");
-        return matchDataOutCome;
+        return matchOutcome;
     }
 
     // for the initial test I will ust the Player class to print a dummy load as a resu
-    // todo if time allowes remove the hardcode requirement
+    // todo if time allows remove the hardcode requirement
     protected static void writeResultsToFile(List<PlayerData> firstResults) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(Config.REPORT_FILE_PATH, true))) {
             for (PlayerData playerData : firstResults) {
