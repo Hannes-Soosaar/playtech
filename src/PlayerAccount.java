@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +10,6 @@ public class PlayerAccount {
     private long playerBalance;
     //(wonGames/NumberOfBetsPlaced)
     private BigDecimal winRate;
-    // a)In case of an illegitimate actions the account is deactivated all counts start
-    // b) all counts start as active
     private boolean isActive;  // In case of an illegitimate action
 
     // s the account is deactivated all counts start
@@ -31,6 +30,14 @@ public class PlayerAccount {
         this.winRate = winRate;
     }
 
+    protected void setPlayerToInactive(){
+        isActive=false;
+    }
+
+    protected long getPlayerBalance(){
+        return playerBalance;
+    }
+
     protected boolean isActive() {
         return isActive;
     }
@@ -41,6 +48,11 @@ public class PlayerAccount {
 
     protected int getBetsPlaced() {
         return betsPlaced;
+    }
+
+    protected BigDecimal getWinRate(){
+        BigDecimal.
+        return winRate.setScale(2, RoundingMode.DOWN);
     }
 
     protected boolean getIsActive() {

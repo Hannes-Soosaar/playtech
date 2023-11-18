@@ -2,7 +2,8 @@ import java.util.List;
 
 public class Transform {
 
-    public void processPlayerData(List<PlayerData> playerDataList, List<PlayerAccount> playerAccounts) {
+    public void processPlayerData(List<PlayerData> playerDataList, List<PlayerAccount> playerAccounts,
+                                  List<MatchData> matchData) {
 
         for (PlayerData playerData : playerDataList) { // iterates through the playerData file
             String playerId = playerData.getPlayerId();
@@ -16,16 +17,15 @@ public class Transform {
                     // player is active
                     String matchId = playerData.getMatchId();
                     String betPlacement = playerData.getBetPlacement();
-                    System.out.printf("A bet was made on: %s in the amount of :%d matchID:%s\n",betPlacement,
+                    System.out.printf("A bet was made on: %s in the amount of :%d matchID:%s\n", betPlacement,
                             transactionAmount, matchId);
                     break;
                 case "WITHDRAW":
-                    System.out.println("A withdraw was made");
-                    //todo add logic for the withdraw
+                        withdrawFromPlayerAccount(playerAccounts,playerData);
                     break;
                 case "DEPOSIT":
                     System.out.println("A deposit was made");
-                    depositToPlayerAccount(playerAccounts,playerId,transactionAmount);
+                    depositToPlayerAccount(playerAccounts, playerId, transactionAmount);
                     break;
                 default:
                     System.out.println("Theres is an invalid transaction!");
@@ -35,23 +35,32 @@ public class Transform {
         }
     }
 
-public void depositToPlayerAccount(List<PlayerAccount> playerAccountList, String playerId, int transactionAmount){
-        for (PlayerAccount playerAccount:playerAccountList) {
-        if (playerAccount.getPlayerId().equals(playerId)){
-            playerAccount.updateBalance(transactionAmount);
+    public void depositToPlayerAccount(List<PlayerAccount> playerAccountList, String playerId, int transactionAmount) {
+        for (PlayerAccount playerAccount : playerAccountList) {
+            if (playerAccount.getPlayerId().equals(playerId)) {
+                playerAccount.updateBalance(transactionAmount);
+            }
         }
-}
+    }
 
+    public void withdrawFromPlayerAccount(List<PlayerAccount> playerAccountList, PlayerData playerData) {
+        for (PlayerAccount playerAccount:playerAccountList){
+            if (playerAccount.getPlayerId().equals(playerData.getPlayerId()) && playerAccount.getIsActive()
+                    && playerAccount.getPlayerBalance() >= playerData.getTransactionAmount() ){
+                playerAccount.updateBalance(-playerData.getTransactionAmount());
+            }else if (playerAccount.getPlayerId().equals(playerData.getPlayerId()) && playerAccount.getIsActive()
+                    && playerAccount.getPlayerBalance() < playerData.getTransactionAmount() ){
+                playerAccount.setPlayerToInactive();
+                IllegitimatePlayers.addIllegitimatePlayer(playerData);
+            }
+        }
 
-
-}
+    }
 
 
     // if the operation is Withdraw check if there is enough funds for the withdraw if yes.. subtract the
     // ammount from the playe
     // if the operation is Deposit add the amount to the player
-
-
 
 
 //    protected List<LegitimatePlayer> getLegitPlayerTransactions(List<PlayerData> playerData,
