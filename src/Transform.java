@@ -2,7 +2,7 @@ import java.util.List;
 
 public class Transform {
 
-    public void processPlayerData(List<PlayerData> playerDataList) {
+    public void processPlayerData(List<PlayerData> playerDataList, List<PlayerAccount> playerAccounts) {
 
         for (PlayerData playerData : playerDataList) { // iterates through the playerData file
             String playerId = playerData.getPlayerId();
@@ -25,19 +25,34 @@ public class Transform {
                     break;
                 case "DEPOSIT":
                     System.out.println("A deposit was made");
+                    depositToPlayerAccount(playerAccounts,playerId,transactionAmount);
                     break;
                 default:
                     System.out.println("Theres is an invalid transaction!");
                     break;
 
             }
-            // if the operation is Withdraw check if there is enough funds for the withdraw if yes.. subtract the
-            // ammount from the playe
-            // if the operation is Deposit add the amount to the player
-
         }
-
     }
+
+public void depositToPlayerAccount(List<PlayerAccount> playerAccountList, String playerId, int transactionAmount){
+        for (PlayerAccount playerAccount:playerAccountList) {
+        if (playerAccount.getPlayerId().equals(playerId)){
+            playerAccount.updateBalance(transactionAmount);
+        }
+}
+
+
+
+}
+
+
+    // if the operation is Withdraw check if there is enough funds for the withdraw if yes.. subtract the
+    // ammount from the playe
+    // if the operation is Deposit add the amount to the player
+
+
+
 
 //    protected List<LegitimatePlayer> getLegitPlayerTransactions(List<PlayerData> playerData,
 //                                                                List<IllegitimatePlayers> illegitimatePlayers,

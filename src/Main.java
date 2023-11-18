@@ -82,7 +82,7 @@ public class Main {
         List<PlayerAccount> playerAccounts = new ArrayList<>();
         playerAccounts = PlayerAccount.initializeAccounts(playerDataTransactions); // Initialize accounts read
         Transform transform = new Transform();
-        transform.processPlayerData(playerDataTransactions);
+        transform.processPlayerData(playerDataTransactions,playerAccounts);
         // to test if  I have access to all data in the player_data.txt file
 //        for (PlayerData playerData : playerDataTransactions) {
 //            System.out.print(playerData.getPlayerId() + " ");

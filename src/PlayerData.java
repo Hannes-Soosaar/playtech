@@ -29,8 +29,8 @@ class PlayerData {
         return matchId;
     }
 
-    protected String getTransactionAmount() {
-        return transactionAmount;
+    protected int getTransactionAmount() {
+        return Integer.valueOf(transactionAmount);
     }
 
     protected String getBetPlacement() {
