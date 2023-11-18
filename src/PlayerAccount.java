@@ -8,13 +8,10 @@ public class PlayerAccount {
     private String playerID;
     private int betsPlaced;
     private long playerBalance;
-    //(wonGames/NumberOfBetsPlaced)
+    //todo (wonGames/NumberOfBetsPlaced)
     private BigDecimal winRate;
-    private boolean isActive;  // In case of an illegitimate action
+    private boolean isActive;
 
-
-    // s the account is deactivated all counts start
-    // as active
     public PlayerAccount(String playerID, int betsPlaced, int playerBalance, BigDecimal winRate, boolean isActive) {
         this.playerID = playerID;
         this.betsPlaced = betsPlaced;
@@ -31,15 +28,15 @@ public class PlayerAccount {
         this.winRate = updatedWinRate;
     }
 
-    protected void setPlayerToInactive(){
-        isActive=false;
+    protected void setPlayerToInactive() {
+        isActive = false;
     }
 
-    protected void addABetPlaced(){
-         betsPlaced++;
+    protected void addABetPlaced() {
+        betsPlaced++;
     }
 
-    protected long getPlayerBalance(){
+    protected long getPlayerBalance() {
         return playerBalance;
     }
 
@@ -55,7 +52,7 @@ public class PlayerAccount {
         return betsPlaced;
     }
 
-    protected BigDecimal getWinRate(){
+    protected BigDecimal getWinRate() {
         return winRate.setScale(2, RoundingMode.DOWN);
     }
 
@@ -80,12 +77,6 @@ public class PlayerAccount {
             }
         }
         Config.displayRunStatus("Player Accounts created");
-            return playerAccounts;
+        return playerAccounts;
     }
-
-
-    // IDs followed with their final balance and their betting win rate (Win rate is calculated by number of won game
-    // / number of placed bets)
-    //	win rate is big decimal number with 2 decimal characters
-    // ordered by player ID.
 }

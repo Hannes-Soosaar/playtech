@@ -21,7 +21,7 @@ public class Config {
     protected  static String  displayRunStatus(String messageToLog) {
         if (Config.DISPLAY_LOG_STATUS) {
             System.out.println(messageToLog);
-            // Add write to log.txt
+            //todo Add write to log.txt
         }
         return messageToLog;
     }

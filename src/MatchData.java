@@ -12,7 +12,6 @@ public class MatchData {
         this.matchResult = matchResult;
     }
 
-    //getters
     protected String getMatchId() {
         return matchId;
     }
@@ -29,8 +28,6 @@ public class MatchData {
     protected String getMatchResult() {
         return matchResult;
     }
-
-
 
 
 }

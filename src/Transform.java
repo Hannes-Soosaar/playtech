@@ -93,7 +93,7 @@ public class Transform {
         }
         return null; // todo handle the error
     }
-
+//todo can not create the host balance from this file we do not yet have all the inactive players
     public void updateBalances(PlayerAccount playerAccount, MatchData match, PlayerData playerData) {
         switch (match.getMatchResult()) { //todo the data type is wrong for the return rate
             case "A":
@@ -124,7 +124,6 @@ public class Transform {
 
         playerAccount.addABetPlaced();
     }
-
 
 }
 

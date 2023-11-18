@@ -1,16 +1,14 @@
-// Operation is considered “illegal” if a player is trying to bet or withdraw more coins than they have on their
-// account.
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class IllegitimatePlayers{
+public class IllegitimatePlayers {
     private String playerId; //value is player ID – A random UUID.
     private String playerOperation; // One of 3 operations: DEPOSIT, BET, WITHDRAW.
     private String matchId;   // match Id – A random UUID. Can be null
     private int transactionSum; //coin number player use for that operation.
     private String betPlacement; // the side of the match the player places the bet on value can be either A or B
-    // constructor
+
     public IllegitimatePlayers(String playerId, String playerOperation, String matchId, int transactionSum,
                                String betPlacement) {
         this.playerId = playerId;
@@ -19,11 +17,12 @@ public class IllegitimatePlayers{
         this.transactionSum = transactionSum;
         this.betPlacement = betPlacement;
     }
+
     private static List<IllegitimatePlayers> illegitimatePlayersList = new ArrayList<>();
 
     public static void addIllegitimatePlayer(PlayerData playerData) {
-    //todo if time permits redo this, it is too cheap!
-        if (playerData.getPlayerOperation().equals("WITHDRAW") ){
+        //todo if time permits redo this, it is too cheap!
+        if (playerData.getPlayerOperation().equals("WITHDRAW")) {
             IllegitimatePlayers illegitimatePlayer = new IllegitimatePlayers(
                     playerData.getPlayerId(),
                     playerData.getPlayerOperation(),
@@ -31,7 +30,7 @@ public class IllegitimatePlayers{
                     playerData.getTransactionAmount(),
                     "null");
             illegitimatePlayersList.add(illegitimatePlayer);
-        }else{
+        } else {
             IllegitimatePlayers illegitimatePlayer = new IllegitimatePlayers(
                     playerData.getPlayerId(),
                     playerData.getPlayerOperation(),
@@ -41,7 +40,7 @@ public class IllegitimatePlayers{
             illegitimatePlayersList.add(illegitimatePlayer);
         }
     }
-    // getters
+
     protected String getPlayerId() {
         return playerId;
     }
@@ -61,7 +60,8 @@ public class IllegitimatePlayers{
     protected String getBetPlacement() {
         return betPlacement;
     }
-    public static List<IllegitimatePlayers> getIllegitimatePlayersList(){
+
+    public static List<IllegitimatePlayers> getIllegitimatePlayersList() {
         return illegitimatePlayersList;
     }
 

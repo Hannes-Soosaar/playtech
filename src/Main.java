@@ -60,7 +60,6 @@ public class Main {
         return matchOutcome;
     }
 
-    // for the initial test I will ust the Player class to print a dummy load as a resu
     // todo if time allows remove the hardcode requirement
     protected static void writeResultsToFile(List<PlayerData> firstResults) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(Config.REPORT_FILE_PATH, true))) {
@@ -129,31 +128,10 @@ public class Main {
                 PlayerAccount.initializeAccounts(playerDataTransactions); // Initialize accounts read
         Transform transform = new Transform();
         transform.processPlayerData(playerDataTransactions, playerAccounts, matchOutcomes);
-        // to test if  I have access to all data in the player_data.txt file
-//        for (PlayerData playerData : playerDataTransactions) {
-//            System.out.print(playerData.getPlayerId() + " ");
-//            System.out.print(playerData.getPlayerOperation() + " ");
-//            System.out.print(playerData.getMatchId() + " ");
-//            System.out.print(playerData.getTransactionAmount() + " ");
-//            System.out.println(playerData.getBetPlacement() + " ");
-//        }
-// to test if I have access to all data in the match_data.txt file
-//        for (MatchData outcome : matchOutcomes) {
-//            System.out.print(outcome.getMatchId()+ " ");
-//            System.out.print(outcome.getRateOfReturnSideA()+ " ");
-//            System.out.print(outcome.getRateOfReturnSideB()+ " ");
-//            System.out.println(outcome.getMatchResult());
-//        }
+
         List<IllegitimatePlayers> illegitimatePlayers = IllegitimatePlayers.getIllegitimatePlayersList();
-//        for (IllegitimatePlayers illegitimatePlayer : illegitimatePlayers) {
-//            System.out.print(illegitimatePlayer.getPlayerId() + " ");
-//            System.out.print(illegitimatePlayer.getPlayerOperation() + " ");
-//            System.out.print(illegitimatePlayer.getMatchId() + " ");
-//            System.out.print(illegitimatePlayer.getTransactionSum() + " ");
-//            System.out.print(illegitimatePlayer.getBetPlacement() + " ");
-//        }
+
         System.out.println("");
-//        writeResultsToFile(playerDataTransactions);
         writeActivePlayerAccounts(playerAccounts);
         writeIllegalPlayers(illegitimatePlayers);
 

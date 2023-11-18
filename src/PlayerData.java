@@ -6,7 +6,6 @@ class PlayerData {
     private String transactionAmount; //coin number player use for that operation.
     private String betPlacement; // the side of the match the player places the bet on value can be either A or B
 
-    // Constructs the PlayerTransaction object
     public PlayerData(String playerId, String playerOperation, String matchId, String transactionAmount,
                       String betPlacement) {
         this.playerId = playerId;
@@ -16,7 +15,6 @@ class PlayerData {
         this.betPlacement = betPlacement;
     }
 
-    // getters
     protected String getPlayerId() {
         return playerId;
     }
