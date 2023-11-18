@@ -5,7 +5,8 @@ import java.util.List;
 public class PlayerAccount {
 
     private String playerID;
-    private int playerBalance;
+    private int betsPlaced;
+    private long playerBalance;
     //(wonGames/NumberOfBetsPlaced)
     private BigDecimal winRate;
     // a)In case of an illegitimate actions the account is deactivated all counts start
@@ -14,8 +15,9 @@ public class PlayerAccount {
 
     // s the account is deactivated all counts start
     // as active
-    public PlayerAccount(String playerID, int playerBalance, BigDecimal winRate, boolean isActive) {
+    public PlayerAccount(String playerID, int betsPlaced, int playerBalance, BigDecimal winRate, boolean isActive) {
         this.playerID = playerID;
+        this.betsPlaced = betsPlaced;
         this.playerBalance = playerBalance;
         this.winRate = winRate;
         this.isActive = isActive;
@@ -37,26 +39,34 @@ public class PlayerAccount {
         return playerID;
     }
 
+    protected int getBetsPlaced() {
+        return betsPlaced;
+    }
 
-    public static void initializeAccounts(List<PlayerData> playerDataList) {
+    protected boolean getIsActive() {
+        return isActive;
+    }
+
+    public static List<PlayerAccount> initializeAccounts(List<PlayerData> playerDataList) {
         List<PlayerAccount> playerAccounts = new ArrayList<>();
         for (PlayerData playerData : playerDataList) {
             String playerId = playerData.getPlayerId();
             boolean accountExists = false;
             for (PlayerAccount existingAccounts : playerAccounts) {
-                if (existingAccounts.getPlayerId().equals(playerId)) ;
-                {
+                if (existingAccounts.getPlayerId().equals(playerId)) {
                     accountExists = true;
                     break;
                 }
             }
-            if (!accountExists){
-                PlayerAccount playerAccount = new PlayerAccount(playerId,0,0,true)
+            if (!accountExists) {
+                PlayerAccount playerAccount = new PlayerAccount(playerId, 0, 0, BigDecimal.ZERO, true);
                 playerAccounts.add(playerAccount);
             }
         }
         Config.displayRunStatus("Player Accounts created");
+        return playerAccounts;
     }
+
 
     // IDs followed with their final balance and their betting win rate (Win rate is calculated by number of won game
     // / number of placed bets)

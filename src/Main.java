@@ -79,23 +79,25 @@ public class Main {
 
         List<PlayerData> playerDataTransactions = readInPlayerData();
         List<MatchData> matchesOutcome = readInMatchData();
-        PlayerAccount.initializeAccounts(playerDataTransactions); // Initialize accounts read form PlayerData
-
+        List<PlayerAccount> playerAccounts = new ArrayList<>();
+        playerAccounts = PlayerAccount.initializeAccounts(playerDataTransactions); // Initialize accounts read
+        Transform transform = new Transform();
+        transform.processPlayerData(playerDataTransactions);
         // to test if  I have access to all data in the player_data.txt file
-        for (PlayerData playerData : playerDataTransactions) {
-            System.out.print(playerData.getPlayerId() + " ");
-            System.out.print(playerData.getPlayerOperation() + " ");
-            System.out.print(playerData.getMatchId() + " ");
-            System.out.print(playerData.getTransactionAmount() + " ");
-            System.out.println(playerData.getBetPlacement() + " ");
-        }
+//        for (PlayerData playerData : playerDataTransactions) {
+//            System.out.print(playerData.getPlayerId() + " ");
+//            System.out.print(playerData.getPlayerOperation() + " ");
+//            System.out.print(playerData.getMatchId() + " ");
+//            System.out.print(playerData.getTransactionAmount() + " ");
+//            System.out.println(playerData.getBetPlacement() + " ");
+//        }
 // to test if I have access to all data in the match_data.txt file
-        for (MatchData outcome : matchesOutcome) {
-            System.out.print(outcome.getMatchId()+ " ");
-            System.out.print(outcome.getRateOfReturnSideA()+ " ");
-            System.out.print(outcome.getRateOfReturnSideB()+ " ");
-            System.out.println(outcome.getMatchResult());
-        }
+//        for (MatchData outcome : matchesOutcome) {
+//            System.out.print(outcome.getMatchId()+ " ");
+//            System.out.print(outcome.getRateOfReturnSideA()+ " ");
+//            System.out.print(outcome.getRateOfReturnSideB()+ " ");
+//            System.out.println(outcome.getMatchResult());
+//        }
         writeResultsToFile(playerDataTransactions);
     }
 }
