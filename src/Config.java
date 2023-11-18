@@ -1,7 +1,6 @@
 public class Config {
-    // Toggle on of the console log
+    // Toggle on-off the status log on the console
     public static boolean DISPLAY_LOG_STATUS = true;
-
     // The path for the files used, if the files need to be placed elsewhere the path should be changed to match
     public static final String PLAYER_FILE_PATH = "./src/player_data.txt";
     public static final String MATCH_FILE_PATH = "./src/match_data.txt";
