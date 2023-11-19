@@ -17,5 +17,4 @@ public class HostBalance {
             hostBalance += addToBalance;
         }
     }
-
 }
