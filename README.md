@@ -73,4 +73,4 @@ balance to the stakeholders
             -Illegitimate player list
             -Host balance
 
-In case of questions please feel free to write to hsoosaar@gmail.com
+For more information please feel free to write to hsoosaar@gmail.com
