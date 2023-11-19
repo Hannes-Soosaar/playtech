@@ -2,16 +2,16 @@ import java.util.List;
 
 public class Transform {
 
-    public void processPlayerData(List<PlayerData> playerDataList, List<PlayerAccount> playerAccountList,
+    public void processPlayerData(List<PlayerData> playerDataList,
+                                  List<PlayerAccount> playerAccountList,
                                   List<MatchData> matchDataList) {
 
-        for (PlayerData playerData : playerDataList) { // iterates through the playerData file
+        for (PlayerData playerData : playerDataList) {
             String playerId = playerData.getPlayerId();
             int transactionAmount = playerData.getTransactionAmount();
             String playerOperation = playerData.getPlayerOperation();
 
             switch (playerOperation) {
-
                 case "BET":
                     if (isValidBet(playerAccountList, transactionAmount, playerId)) {
                         processBet(playerAccountList, matchDataList, playerData);
@@ -26,24 +26,21 @@ public class Transform {
                     depositToPlayerAccount(playerAccountList, playerId, transactionAmount);
                     break;
                 default:
-                    System.out.println("There is an invalid transaction!");
+                    Config.displayRunStatus("there is an Invalid Operatorion in the player_data file");
                     break;
-
             }
         }
-
-      /* todo agg the generateHostBalance  takes in the playerAccountList, matchDataList and playerDataList sets the
-          host balance */
-
+        generateHostBalance(playerAccountList, playerDataList, matchDataList);
     }
 
-    public void processBet(List<PlayerAccount> playerAccountList, List<MatchData> matchDataList, PlayerData playerData) {
+    public void processBet(List<PlayerAccount> playerAccountList,
+                           List<MatchData> matchDataList,
+                           PlayerData playerData) {
         MatchData match = findMatch(matchDataList, playerData);
         PlayerAccount playerAccount = findPlayerAccount(playerData.getPlayerId(), playerAccountList);
         updateBalances(playerAccount, match, playerData);
     }
-
-    /* Can not create the host balance runtime as not all player are validated players*/
+    /* Can not create the host balance runtime as not all player statuses are known are validated players*/
     public void updateBalances(PlayerAccount playerAccount, MatchData match, PlayerData playerData) {
         switch (match.getMatchResult().toLowerCase()) {
             case "a":
@@ -135,8 +132,49 @@ public class Transform {
         return null;
     }
 
-    public HostBalance generateHostBalance() {
-        HostBalance hostBalance = new HostBalance();
+    public HostBalance generateHostBalance(List<PlayerAccount> playerAccountList,
+                                           List<PlayerData> playerDataList,
+                                           List<MatchData> matchDataList) {
+        HostBalance hostBalance = new HostBalance(); // generate a new host object
+
+        for (PlayerData playerData : playerDataList) {
+            MatchData match = findMatch(matchDataList, playerData);
+            PlayerAccount playerAccount = findPlayerAccount(playerData.getPlayerId(), playerAccountList);
+            int matchTotalAmount = 0;
+            if (playerAccount.getIsActive()
+                    && playerAccount.getPlayerId().equals(playerData.getMatchId())
+                    && playerData.getMatchId().equals(match.getMatchId())) {
+
+                switch (match.getMatchResult().toLowerCase()) {
+                    case "a":
+                        matchTotalAmount =
+                                ((int) Math.floor(match.getRateOfReturnSideA()
+                                        * (double) playerData.getTransactionAmount()));
+                        if (playerData.getBetPlacement().equalsIgnoreCase("a")) {
+                            hostBalance.setBalance(matchTotalAmount, true);
+                        } else {
+                            hostBalance.setBalance(matchTotalAmount, false);
+                        }
+                        break;
+                    case "b":
+                        matchTotalAmount =
+                                ((int) Math.floor(match.getRateOfReturnSideB()
+                                        * (double) playerData.getTransactionAmount()));
+                        if (playerData.getBetPlacement().equalsIgnoreCase("b")) {
+                            hostBalance.setBalance(matchTotalAmount, true);
+                        } else {
+                            hostBalance.setBalance(matchTotalAmount, false);
+                        }
+                        break;
+                    case "darw":
+                        // do nothing but it is a valid input
+                    default:
+                        Config.displayRunStatus(
+                                "The match result is invalid, match case must be A, B or DRAW");
+                        break;
+                }
+            }
+        }
         return hostBalance;
     }
 
