@@ -3,11 +3,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IllegitimatePlayers {
-    private String playerId; //value is player ID – A random UUID.
-    private String playerOperation; // One of 3 operations: DEPOSIT, BET, WITHDRAW.
-    private String matchId;   // match Id – A random UUID. Can be null
-    private int transactionSum; //coin number player use for that operation.
-    private String betPlacement; // the side of the match the player places the bet on value can be either A or B
+    private String playerId;
+    private String playerOperation;
+    private String matchId;
+    private int transactionSum;
+    private String betPlacement;
 
     public IllegitimatePlayers(String playerId, String playerOperation, String matchId, int transactionSum,
                                String betPlacement) {
@@ -44,9 +44,7 @@ public class IllegitimatePlayers {
 
     private static List<IllegitimatePlayers> illegitimatePlayersList = new ArrayList<>();
 
-    // todo move the  function
     public static void addIllegitimatePlayer(PlayerData playerData) {
-        //todo if time permits redo this, it is too cheap, should contain the function to set the player inactive.
         if (playerData.getPlayerOperation().equals("WITHDRAW")) {
             IllegitimatePlayers illegitimatePlayer = new IllegitimatePlayers(
                     playerData.getPlayerId(),
@@ -65,5 +63,4 @@ public class IllegitimatePlayers {
             illegitimatePlayersList.add(illegitimatePlayer);
         }
     }
-
 }
