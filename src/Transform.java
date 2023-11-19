@@ -39,7 +39,6 @@ public class Transform {
         updateBalances(playerAccount, match, playerData);
     }
 
-    /* Can not create the host balance runtime as not all player statuses are known are validated players*/
     public void updateBalances(PlayerAccount playerAccount, MatchData match, PlayerData playerData) {
         switch (match.getMatchResult().toLowerCase()) {
             case "a":
@@ -169,7 +168,6 @@ public class Transform {
                         }
                         break;
                     case "darw":
-                        // do nothing, but it is a valid case.
                     default:
                         break;
                 }
@@ -177,6 +175,4 @@ public class Transform {
         }
         return hostBalance;
     }
-
 }
-
