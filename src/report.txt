@@ -1,0 +1,5 @@
+ABC-123 1150 0,60
+
+DEF-456 WITHDRAW null 2100 null
+
+-150
