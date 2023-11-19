@@ -91,6 +91,4 @@ public class PlayerAccount {
         Config.displayRunStatus("Player Accounts created");
         return playerAccounts;
     }
-
-
 }
