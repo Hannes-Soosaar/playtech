@@ -40,7 +40,6 @@ public class WriteToFile {
         Config.displayRunStatus("Active player stats written to file: OK");
     }
 
-
     public static void illegalPlayers(List<IllegitimatePlayers> illegitimatePlayersList) {
 
         illegitimatePlayersList.sort(Comparator.comparing(IllegitimatePlayers::getPlayerId));
@@ -57,7 +56,6 @@ public class WriteToFile {
                         illegitimatePlayer.getMatchId(),
                         illegitimatePlayer.getTransactionSum(),
                         illegitimatePlayer.getBetPlacement());
-
             }
             writer.println("");
         } catch (IOException e) {
@@ -65,17 +63,14 @@ public class WriteToFile {
         }
         Config.displayRunStatus("List of Illegitimate players written to file: OK");
     }
-//
 
     public static void hostBalance(int hostBalance) {
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(Config.REPORT_FILE_PATH, true))) {
-
             writer.printf("%d", hostBalance);
         } catch (IOException e) {
             e.printStackTrace();
         }
         Config.displayRunStatus("Balance report written to file: OK");
     }
-
 }
