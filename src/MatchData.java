@@ -1,10 +1,9 @@
 public class MatchData {
-    private String matchId; //the match Id – A random UUID.
-    private String rateOfReturnSideA;  // the return rate for A side.
-    private String rateOfReturnSideB; // return rate for B side
-    private String matchResult; // result of the match
+    private String matchId; 
+    private String rateOfReturnSideA;  
+    private String rateOfReturnSideB; 
+    private String matchResult; 
 
-    // constructor for the Match class
     public MatchData(String matchId, String rateOfReturnSideA, String rateOfReturnSideB, String matchResult) {
         this.matchId = matchId;
         this.rateOfReturnSideA = rateOfReturnSideA;
@@ -27,5 +26,4 @@ public class MatchData {
     protected String getMatchResult() {
         return matchResult;
     }
-
 }
