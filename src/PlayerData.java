@@ -1,10 +1,10 @@
 class PlayerData {
 
-    private String playerId; //value is player ID – A random UUID.
-    private String playerOperation; // One of 3 operations: DEPOSIT, BET, WITHDRAW.
-    private String matchId;   // match Id – A random UUID. Can be null
-    private String transactionAmount; //coin number player use for that operation.
-    private String betPlacement; // the side of the match the player places the bet on value can be either A or B
+    private String playerId; 
+    private String playerOperation; 
+    private String matchId;  
+    private String transactionAmount; 
+    private String betPlacement; 
 
     public PlayerData(String playerId, String playerOperation, String matchId, String transactionAmount,
                       String betPlacement) {
