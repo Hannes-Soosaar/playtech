@@ -12,11 +12,11 @@ public class PlayerAccount {
     private BigDecimal winRate;
     private boolean isActive;
 
-    public PlayerAccount(String playerID, int betsPlaced, int betsWon , int playerBalance, BigDecimal winRate,
+    public PlayerAccount(String playerID, int betsPlaced, int betsWon, int playerBalance, BigDecimal winRate,
                          boolean isActive) {
         this.playerID = playerID;
         this.betsPlaced = betsPlaced;
-        this.betsWon =betsWon;
+        this.betsWon = betsWon;
         this.playerBalance = playerBalance;
         this.winRate = winRate;
         this.isActive = isActive;
@@ -28,54 +28,50 @@ public class PlayerAccount {
     }
 
     protected void updateWinRate(int betsPlaced, int betsWon) {
-
-        if ( betsPlaced > 0){
-             this.winRate =  BigDecimal.valueOf(betsWon).divide(BigDecimal.valueOf(betsPlaced));
+        if (betsPlaced > 0) {
+            this.winRate = BigDecimal.valueOf(betsWon).divide(BigDecimal.valueOf(betsPlaced),
+                    2,RoundingMode.HALF_UP);
         } else {
             this.winRate = BigDecimal.ZERO;
         }
-
-
     }
 
-    protected void addBetsWon(){
-        betsWon++;
+    protected void addBetsWon() {
+        this.betsWon++;
     }
 
     protected void setPlayerToInactive() {
-        isActive = false;
+       this.isActive = false;
     }
 
     protected void addABetPlaced() {
-        betsPlaced++;
+       this.betsPlaced++;
     }
 
     protected long getPlayerBalance() {
-        return playerBalance;
-    }
-
-    protected boolean isActive() {
-        return isActive;
+        return this.playerBalance;
     }
 
     protected String getPlayerId() {
-        return playerID;
+        return this.playerID;
     }
 
     protected int getBetsPlaced() {
-        return betsPlaced;
+        return this.betsPlaced;
     }
+
     protected int getBetsWon() {
-        return betsWon;
+        return this.betsWon;
     }
 
     protected BigDecimal getWinRate() {
-        return winRate.setScale(2, RoundingMode.DOWN);
+        return this.winRate.setScale(2, RoundingMode.DOWN);
     }
 
     protected boolean getIsActive() {
-        return isActive;
+        return this.isActive;
     }
+
     public static List<PlayerAccount> initializeAccounts(List<PlayerData> playerDataList) {
         List<PlayerAccount> playerAccounts = new ArrayList<>();
         for (PlayerData playerData : playerDataList) {
@@ -88,7 +84,7 @@ public class PlayerAccount {
                 }
             }
             if (!accountExists) {
-                PlayerAccount playerAccount = new PlayerAccount(playerId, 0, 0,0, BigDecimal.ZERO, true);
+                PlayerAccount playerAccount = new PlayerAccount(playerId, 0, 0, 0, BigDecimal.ZERO, true);
                 playerAccounts.add(playerAccount);
             }
         }

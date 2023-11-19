@@ -1,5 +1,7 @@
 import java.io.*;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -61,27 +63,36 @@ public class Main {
         return matchOutcome;
     }
 
-    // todo if time allows remove the hardcode requirement
     protected static void writeActivePlayerAccounts(List<PlayerAccount> playerAccountList) {
 
         playerAccountList.sort(Comparator.comparing(PlayerAccount::getPlayerId));
+        boolean hasActive = false;
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(Config.REPORT_FILE_PATH, true))) {
+
             for (PlayerAccount playerAccount : playerAccountList) {
+
                 if (playerAccount.getIsActive()) {
-                    BigDecimal winRate= playerAccount.getWinRate();
-                    writer.printf("%s %d %.2f\n",
+                    BigDecimal winRate = playerAccount.getWinRate();
+                    DecimalFormatSymbols symbols =new DecimalFormatSymbols();
+                    symbols.setDecimalSeparator(',');
+                    DecimalFormat decimalFormat = new DecimalFormat("0.00",symbols);
+                    writer.printf("%s %d %s%n",
                             playerAccount.getPlayerId(),
                             playerAccount.getPlayerBalance(),
-                            winRate.doubleValue()
+                            decimalFormat.format(winRate)
                     );
+                    hasActive = true;
                 }
             }
-            writer.println(""); // inputs an empty line when finished
+            if (!hasActive) {
+                writer.println("");
+            }
+            writer.println("");
         } catch (IOException e) {
-            e.printStackTrace(); //todo read up on what this does exactly
+            e.printStackTrace();
         }
-        Config.displayRunStatus("\nActive player stats written to file: OK");
+        Config.displayRunStatus("Active player stats written to file: OK");
     }
 
     protected static void writeIllegalPlayers(List<IllegitimatePlayers> illegitimatePlayersList) {
@@ -89,40 +100,43 @@ public class Main {
         illegitimatePlayersList.sort(Comparator.comparing(IllegitimatePlayers::getPlayerId));
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(Config.REPORT_FILE_PATH, true))) {
+            if (illegitimatePlayersList.isEmpty()) {
+                writer.println("");
+            }
             for (IllegitimatePlayers illegitimatePlayer : illegitimatePlayersList) {
-                writer.printf("%s %s %s %s %s\n",
+
+                writer.printf("%s %s %s %s %s%n",
                         illegitimatePlayer.getPlayerId(),
                         illegitimatePlayer.getPlayerOperation(),
                         illegitimatePlayer.getMatchId(),
                         illegitimatePlayer.getTransactionSum(),
                         illegitimatePlayer.getBetPlacement());
+
             }
             writer.println("");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Config.displayRunStatus("\nList of Illegitimate players written to file: OK");
+        Config.displayRunStatus("List of Illegitimate players written to file: OK");
     }
 
     protected static void writeHostBalance(int hostBalance) {
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(Config.REPORT_FILE_PATH, true))) {
-                writer.printf("%d \n", hostBalance);
-                writer.println("");
+
+            writer.printf("%d", hostBalance);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Config.displayRunStatus("\nBalance report written to file: OK");
+        Config.displayRunStatus("Balance report written to file: OK");
     }
-
-
 
     public static void main(String[] args) {
 
         HostBalance hostBalance;
 
-        List<PlayerData> playerDataTransactions = readInPlayerData(); // todo move  to Extract class
-        List<MatchData> matchOutcomes = readInMatchData();             // todo move to  Extract class
+        List<PlayerData> playerDataTransactions = readInPlayerData();
+        List<MatchData> matchOutcomes = readInMatchData();
         List<PlayerAccount> playerAccounts =
                 PlayerAccount.initializeAccounts(playerDataTransactions);
         Transform transform = new Transform();

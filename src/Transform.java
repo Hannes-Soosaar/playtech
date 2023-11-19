@@ -3,8 +3,8 @@ import java.util.List;
 public class Transform {
 
     public HostBalance processPlayerData(List<PlayerData> playerDataList,
-                                  List<PlayerAccount> playerAccountList,
-                                  List<MatchData> matchDataList) {
+                                         List<PlayerAccount> playerAccountList,
+                                         List<MatchData> matchDataList) {
 
         for (PlayerData playerData : playerDataList) {
             String playerId = playerData.getPlayerId();
@@ -13,10 +13,8 @@ public class Transform {
 
             switch (playerOperation) {
                 case "BET":
-                    if (isValidBet(playerAccountList, transactionAmount, playerId)) {
+                    if (isValidBet(playerAccountList, playerData,transactionAmount, playerId)) {
                         processBet(playerAccountList, matchDataList, playerData);
-                    } else {
-                        IllegitimatePlayers.addIllegitimatePlayer(playerData);
                     }
                     break;
                 case "WITHDRAW":
@@ -26,11 +24,10 @@ public class Transform {
                     depositToPlayerAccount(playerAccountList, playerId, transactionAmount);
                     break;
                 default:
-                    Config.displayRunStatus("there is an Invalid Operation in the player_data file");
                     break;
             }
         }
-     return generateHostBalance(playerAccountList, playerDataList, matchDataList);
+        return generateHostBalance(playerAccountList, playerDataList, matchDataList);
     }
 
     public void processBet(List<PlayerAccount> playerAccountList,
@@ -40,6 +37,7 @@ public class Transform {
         PlayerAccount playerAccount = findPlayerAccount(playerData.getPlayerId(), playerAccountList);
         updateBalances(playerAccount, match, playerData);
     }
+
     /* Can not create the host balance runtime as not all player statuses are known are validated players*/
     public void updateBalances(PlayerAccount playerAccount, MatchData match, PlayerData playerData) {
         switch (match.getMatchResult().toLowerCase()) {
@@ -68,11 +66,10 @@ public class Transform {
                 playerAccount.updateBalance(playerData.getTransactionAmount());
                 break;
             default:
-                Config.displayRunStatus("The match result is invalid, match case must be A, B or DRAW");
                 break;
         }
         playerAccount.addABetPlaced();
-        playerAccount.updateWinRate(playerAccount.getBetsPlaced(),playerAccount.getBetsWon());
+        playerAccount.updateWinRate(playerAccount.getBetsPlaced(), playerAccount.getBetsWon());
     }
 
     public void withdrawFromPlayerAccount(List<PlayerAccount> playerAccountList,
@@ -100,18 +97,20 @@ public class Transform {
         }
     }
 
-    public boolean isValidBet(List<PlayerAccount> playerAccountList, int transactionAmount, String playerId) {
-
+    public boolean isValidBet(List<PlayerAccount> playerAccountList, PlayerData playerData,  int transactionAmount,
+                              String playerId) {
         for (PlayerAccount playerAccount : playerAccountList) {
             if (playerAccount.getPlayerId().equals(playerId) &&
-                    playerAccount.getPlayerBalance() > transactionAmount &&
+                    playerAccount.getPlayerBalance() >= transactionAmount &&
                     playerAccount.getIsActive()) {
                 return true;
             } else if (playerAccount.getPlayerId().equals(playerId) &&
                     playerAccount.getPlayerBalance() < transactionAmount &&
                     playerAccount.getIsActive()) {
                 playerAccount.setPlayerToInactive();
+                IllegitimatePlayers.addIllegitimatePlayer(playerData);
             }
+
         }
         return false;
     }
@@ -122,7 +121,6 @@ public class Transform {
                 return matchData;
             }
         }
-
         return new MatchData("", "", "", "");
     }
 
@@ -139,8 +137,7 @@ public class Transform {
     public HostBalance generateHostBalance(List<PlayerAccount> playerAccountList,
                                            List<PlayerData> playerDataList,
                                            List<MatchData> matchDataList) {
-        HostBalance hostBalance = new HostBalance(); // generate a new host object
-
+        HostBalance hostBalance = new HostBalance();
         for (PlayerData playerData : playerDataList) {
             MatchData match = findMatch(matchDataList, playerData);
             PlayerAccount playerAccount = findPlayerAccount(playerData.getPlayerId(), playerAccountList);
@@ -173,8 +170,6 @@ public class Transform {
                     case "darw":
                         // do nothing, but it is a valid case.
                     default:
-                        Config.displayRunStatus(
-                                "A deposti or Withdraw was made");
                         break;
                 }
             }
