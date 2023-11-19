@@ -24,7 +24,6 @@ public class MatchData {
     protected double getRateOfReturnSideB() {
         return Double.parseDouble(rateOfReturnSideB);
     }
-
     protected String getMatchResult() {
         return matchResult;
     }

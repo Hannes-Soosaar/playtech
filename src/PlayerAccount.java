@@ -59,7 +59,7 @@ public class PlayerAccount {
     protected boolean getIsActive() {
         return isActive;
     }
-
+  //todo move to ??
     public static List<PlayerAccount> initializeAccounts(List<PlayerData> playerDataList) {
         List<PlayerAccount> playerAccounts = new ArrayList<>();
         for (PlayerData playerData : playerDataList) {

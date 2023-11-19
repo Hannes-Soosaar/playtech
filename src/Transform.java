@@ -2,8 +2,8 @@ import java.util.List;
 
 public class Transform {
 
-    public void processPlayerData(List<PlayerData> playerDataList, List<PlayerAccount> playerAccounts,
-                                  List<MatchData> matchData) {
+    public void processPlayerData(List<PlayerData> playerDataList, List<PlayerAccount> playerAccountList,
+                                  List<MatchData> matchDataList) {
 
         for (PlayerData playerData : playerDataList) { // iterates through the playerData file
             String playerId = playerData.getPlayerId();
@@ -13,33 +13,65 @@ public class Transform {
             switch (playerOperation) {
 
                 case "BET":
-                    if (isValidBet(playerAccounts, transactionAmount, playerId)) {
-                        processBet(playerAccounts, matchData, playerData);
+                    if (isValidBet(playerAccountList, transactionAmount, playerId)) {
+                        processBet(playerAccountList, matchDataList, playerData);
                     } else {
                         IllegitimatePlayers.addIllegitimatePlayer(playerData);
                     }
                     break;
                 case "WITHDRAW":
-                    withdrawFromPlayerAccount(playerAccounts, playerData);
+                    withdrawFromPlayerAccount(playerAccountList, playerData);
                     break;
                 case "DEPOSIT":
-                    depositToPlayerAccount(playerAccounts, playerId, transactionAmount);
+                    depositToPlayerAccount(playerAccountList, playerId, transactionAmount);
                     break;
                 default:
-                    System.out.println("Theres is an invalid transaction!");
+                    System.out.println("There is an invalid transaction!");
                     break;
 
             }
         }
+
+      /* todo agg the generateHostBalance  takes in the playerAccountList, matchDataList and playerDataList sets the
+          host balance */
+
     }
 
-    public void depositToPlayerAccount(List<PlayerAccount> playerAccountList, String playerId,
-                                       int transactionAmount) {
-        for (PlayerAccount playerAccount : playerAccountList) {
-            if (playerAccount.getPlayerId().equals(playerId)) {
-                playerAccount.updateBalance(transactionAmount);
-            }
+    public void processBet(List<PlayerAccount> playerAccountList, List<MatchData> matchDataList, PlayerData playerData) {
+        MatchData match = findMatch(matchDataList, playerData);
+        PlayerAccount playerAccount = findPlayerAccount(playerData.getPlayerId(), playerAccountList);
+        updateBalances(playerAccount, match, playerData);
+    }
+
+    /* Can not create the host balance runtime as not all player are validated players*/
+    public void updateBalances(PlayerAccount playerAccount, MatchData match, PlayerData playerData) {
+        switch (match.getMatchResult().toLowerCase()) {
+            case "a":
+                if (playerData.getBetPlacement().equals("A")) {
+                    playerAccount.updateBalance(
+                            (int) Math.floor(match.getRateOfReturnSideA() * (double) playerData.getTransactionAmount())
+                    );
+                } else {
+                    playerAccount.updateBalance(-playerData.getTransactionAmount());
+                }
+                break;
+            case "b":
+                if (playerData.getBetPlacement().equals("B")) {
+                    playerAccount.updateBalance(
+                            (int) Math.floor(match.getRateOfReturnSideB() * (double) playerData.getTransactionAmount())
+                    );
+                } else {
+                    playerAccount.updateBalance(-playerData.getTransactionAmount());
+                }
+                break;
+            case "draw":
+                playerAccount.updateBalance(playerData.getTransactionAmount());
+                break;
+            default:
+                Config.displayRunStatus("The match result is invalid, match case must be A, B or DRAW");
+                break;
         }
+        playerAccount.addABetPlaced();
     }
 
     public void withdrawFromPlayerAccount(List<PlayerAccount> playerAccountList,
@@ -58,6 +90,15 @@ public class Transform {
         }
     }
 
+    public void depositToPlayerAccount(List<PlayerAccount> playerAccountList, String playerId,
+                                       int transactionAmount) {
+        for (PlayerAccount playerAccount : playerAccountList) {
+            if (playerAccount.getPlayerId().equals(playerId)) {
+                playerAccount.updateBalance(transactionAmount);
+            }
+        }
+    }
+
     public boolean isValidBet(List<PlayerAccount> playerAccountList, int transactionAmount, String playerId) {
 
         for (PlayerAccount playerAccount : playerAccountList) {
@@ -65,15 +106,13 @@ public class Transform {
                     playerAccount.getPlayerBalance() > transactionAmount &&
                     playerAccount.getIsActive()) {
                 return true;
+            } else if (playerAccount.getPlayerId().equals(playerId) &&
+                    playerAccount.getPlayerBalance() < transactionAmount &&
+                    playerAccount.getIsActive()) {
+                playerAccount.setPlayerToInactive();
             }
         }
         return false;
-    }
-
-    public void processBet(List<PlayerAccount> playerAccountList, List<MatchData> matchDataList, PlayerData playerData) {
-        MatchData match = findMatch(matchDataList, playerData);
-        PlayerAccount playerAccount = findPlayerAccount(playerData.getPlayerId(), playerAccountList);
-        updateBalances(playerAccount, match, playerData);
     }
 
     public MatchData findMatch(List<MatchData> matchDataList, PlayerData playerData) {
@@ -82,7 +121,8 @@ public class Transform {
                 return matchData;
             }
         }
-        return null;  // todo handle the error.
+        Config.displayRunStatus("No matching games in Player_Data and Match_Data");
+        return null;
     }
 
     public PlayerAccount findPlayerAccount(String playerId, List<PlayerAccount> playerAccountList) {
@@ -91,38 +131,13 @@ public class Transform {
                 return playerAccount;
             }
         }
-        return null; // todo handle the error
+        Config.displayRunStatus("No account for the player in player_data");
+        return null;
     }
-//todo can not create the host balance from this file we do not yet have all the inactive players
-    public void updateBalances(PlayerAccount playerAccount, MatchData match, PlayerData playerData) {
-        switch (match.getMatchResult()) { //todo the data type is wrong for the return rate
-            case "A":
-                if (playerData.getBetPlacement().equals("A")) {
-                    playerAccount.updateBalance(
-                            (int) Math.floor(match.getRateOfReturnSideA() * (double) playerData.getTransactionAmount())
-                    );
-                } else {
-                    playerAccount.updateBalance(-playerData.getTransactionAmount());
-                }
-                break;
-            case "B":
-                if (playerData.getBetPlacement().equals("B")) {
-                    playerAccount.updateBalance(
-                            (int) Math.floor(match.getRateOfReturnSideB() * (double) playerData.getTransactionAmount())
-                    );
-                } else {
-                    playerAccount.updateBalance(-playerData.getTransactionAmount());
-                }
-                break;
-            case "DRAW":
-                playerAccount.updateBalance(playerData.getTransactionAmount());
-                break;
-            default:
-                // todo handle any other case
-                break;
-        }
 
-        playerAccount.addABetPlaced();
+    public HostBalance generateHostBalance() {
+        HostBalance hostBalance = new HostBalance();
+        return hostBalance;
     }
 
 }

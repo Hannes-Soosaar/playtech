@@ -18,29 +18,6 @@ public class IllegitimatePlayers {
         this.betPlacement = betPlacement;
     }
 
-    private static List<IllegitimatePlayers> illegitimatePlayersList = new ArrayList<>();
-
-    public static void addIllegitimatePlayer(PlayerData playerData) {
-        //todo if time permits redo this, it is too cheap!
-        if (playerData.getPlayerOperation().equals("WITHDRAW")) {
-            IllegitimatePlayers illegitimatePlayer = new IllegitimatePlayers(
-                    playerData.getPlayerId(),
-                    playerData.getPlayerOperation(),
-                    "null",
-                    playerData.getTransactionAmount(),
-                    "null");
-            illegitimatePlayersList.add(illegitimatePlayer);
-        } else {
-            IllegitimatePlayers illegitimatePlayer = new IllegitimatePlayers(
-                    playerData.getPlayerId(),
-                    playerData.getPlayerOperation(),
-                    playerData.getMatchId(),
-                    playerData.getTransactionAmount(),
-                    playerData.getBetPlacement());
-            illegitimatePlayersList.add(illegitimatePlayer);
-        }
-    }
-
     protected String getPlayerId() {
         return playerId;
     }
@@ -63,6 +40,30 @@ public class IllegitimatePlayers {
 
     public static List<IllegitimatePlayers> getIllegitimatePlayersList() {
         return illegitimatePlayersList;
+    }
+
+    private static List<IllegitimatePlayers> illegitimatePlayersList = new ArrayList<>();
+
+    // todo move the  function
+    public static void addIllegitimatePlayer(PlayerData playerData) {
+        //todo if time permits redo this, it is too cheap, should contain the function to set the player inactive.
+        if (playerData.getPlayerOperation().equals("WITHDRAW")) {
+            IllegitimatePlayers illegitimatePlayer = new IllegitimatePlayers(
+                    playerData.getPlayerId(),
+                    playerData.getPlayerOperation(),
+                    "null",
+                    playerData.getTransactionAmount(),
+                    "null");
+            illegitimatePlayersList.add(illegitimatePlayer);
+        } else {
+            IllegitimatePlayers illegitimatePlayer = new IllegitimatePlayers(
+                    playerData.getPlayerId(),
+                    playerData.getPlayerOperation(),
+                    playerData.getMatchId(),
+                    playerData.getTransactionAmount(),
+                    playerData.getBetPlacement());
+            illegitimatePlayersList.add(illegitimatePlayer);
+        }
     }
 
 }
