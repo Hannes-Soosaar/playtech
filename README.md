@@ -1,8 +1,7 @@
 # Betting data report Generator (*BDRG*)
 
 The BDRG is created to give an overview of active accounts, illegitimate players, and the hosts
-balance to the stakeholders.
-
+balance to the stakeholders
 
     ## Data Extraction
 
@@ -11,7 +10,7 @@ balance to the stakeholders.
 
     There are formatting guidelines for the input files that need to be followed to ensure data extraction
 
-        ###player_data.txt
+        ### player_data.txt
             - the file can not have an empty line
             - the data delimiters are ","
             - there must be no more than 5 columns
@@ -24,7 +23,7 @@ balance to the stakeholders.
 
         **playerID,operation,matchId,transactionSum,betPlacedOn**
 
-        ###match_data.txt
+        ### match_data.txt
             - the file can not have an empty line
             - the data delimiters are ","
             - there must be no more than 4 columns
@@ -36,9 +35,9 @@ balance to the stakeholders.
 
         **matchId,matchReturnOnA,matchReturnOnB,matchResult**
 
-    ##Data Transformation
+    ## Data Transformation
 
-        ###playerAccount
+        ### playerAccount
             - Player accounts are created based on the *"player_data.txt"* file
             - All starting balances start from 0
             - Any operation that exceeds the players balance will have the player marked as an illegitimate player.
@@ -51,7 +50,7 @@ balance to the stakeholders.
              - Any player that has tried to place a bet or withdraw more than what is on their balance will be placed on
               the illegitimate player list
 
-        ###hostBalance
+        ### hostBalance
             A balance is calculated for the host based on the following rules
                 -The balance starts at 0
                 -The balance can be negative
@@ -62,7 +61,7 @@ balance to the stakeholders.
 
     ## Report Generations
 
-        **The winRatio on the player report uses a "," (comma) as a decimal separator**
+        **The win ratio on the player report uses a "," (comma) as a decimal separator**
 
         - All reports are saved to a file with an empty line separating the reports
         - If there is nothing to report an empty line will be added to the file instead of the report, the report
