@@ -7,25 +7,39 @@ public class PlayerAccount {
 
     private String playerID;
     private int betsPlaced;
+    private int betsWon;
     private long playerBalance;
-    //todo (wonGames/NumberOfBetsPlaced)
     private BigDecimal winRate;
     private boolean isActive;
 
-    public PlayerAccount(String playerID, int betsPlaced, int playerBalance, BigDecimal winRate, boolean isActive) {
+    public PlayerAccount(String playerID, int betsPlaced, int betsWon , int playerBalance, BigDecimal winRate,
+                         boolean isActive) {
         this.playerID = playerID;
         this.betsPlaced = betsPlaced;
+        this.betsWon =betsWon;
         this.playerBalance = playerBalance;
         this.winRate = winRate;
         this.isActive = isActive;
+
     }
 
     protected void updateBalance(int amount) {
         this.playerBalance += amount;
     }
 
-    protected void setWinRate(BigDecimal updatedWinRate) {
-        this.winRate = updatedWinRate;
+    protected void updateWinRate(int betsPlaced, int betsWon) {
+
+        if ( betsPlaced > 0){
+             this.winRate =  BigDecimal.valueOf(betsWon).divide(BigDecimal.valueOf(betsPlaced));
+        } else {
+            this.winRate = BigDecimal.ZERO;
+        }
+
+
+    }
+
+    protected void addBetsWon(){
+        betsWon++;
     }
 
     protected void setPlayerToInactive() {
@@ -51,6 +65,9 @@ public class PlayerAccount {
     protected int getBetsPlaced() {
         return betsPlaced;
     }
+    protected int getBetsWon() {
+        return betsWon;
+    }
 
     protected BigDecimal getWinRate() {
         return winRate.setScale(2, RoundingMode.DOWN);
@@ -59,7 +76,6 @@ public class PlayerAccount {
     protected boolean getIsActive() {
         return isActive;
     }
-  //todo move to ??
     public static List<PlayerAccount> initializeAccounts(List<PlayerData> playerDataList) {
         List<PlayerAccount> playerAccounts = new ArrayList<>();
         for (PlayerData playerData : playerDataList) {
@@ -72,11 +88,13 @@ public class PlayerAccount {
                 }
             }
             if (!accountExists) {
-                PlayerAccount playerAccount = new PlayerAccount(playerId, 0, 0, BigDecimal.ZERO, true);
+                PlayerAccount playerAccount = new PlayerAccount(playerId, 0, 0,0, BigDecimal.ZERO, true);
                 playerAccounts.add(playerAccount);
             }
         }
         Config.displayRunStatus("Player Accounts created");
         return playerAccounts;
     }
+
+
 }

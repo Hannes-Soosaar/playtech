@@ -5,16 +5,13 @@ public class HostBalance {
      host balance start at 0
      any bet made by a player set inactive does not change the balance
      */
-
     private int hostBalance;
 
-
-    HostBalance() {
-
+    public HostBalance() {
         this.hostBalance = hostBalance;
     }
 
-    protected int getBalance() {
+    public int getBalance() {
         return hostBalance;
     }
 

@@ -1,4 +1,5 @@
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -61,23 +62,6 @@ public class Main {
     }
 
     // todo if time allows remove the hardcode requirement
-    protected static void writeResultsToFile(List<PlayerData> firstResults) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(Config.REPORT_FILE_PATH, true))) {
-            for (PlayerData playerData : firstResults) {
-                writer.printf("%s %s %s %s %s \n",
-                        playerData.getPlayerId(),
-                        playerData.getPlayerOperation(),
-                        playerData.getMatchId(),
-                        playerData.getTransactionAmount(),
-                        playerData.getBetPlacement());
-            }
-            writer.println(""); // inputs an empty line when finished
-        } catch (IOException e) {
-            e.printStackTrace(); //todo read up on what this does exactly
-        }
-        Config.displayRunStatus("\n Player Data written to file: OK");
-    }
-
     protected static void writeActivePlayerAccounts(List<PlayerAccount> playerAccountList) {
 
         playerAccountList.sort(Comparator.comparing(PlayerAccount::getPlayerId));
@@ -85,10 +69,11 @@ public class Main {
         try (PrintWriter writer = new PrintWriter(new FileWriter(Config.REPORT_FILE_PATH, true))) {
             for (PlayerAccount playerAccount : playerAccountList) {
                 if (playerAccount.getIsActive()) {
-                    writer.printf("%s %d %s\n",
+                    BigDecimal winRate= playerAccount.getWinRate();
+                    writer.printf("%s %d %.2f\n",
                             playerAccount.getPlayerId(),
                             playerAccount.getPlayerBalance(),
-                            playerAccount.getBetsPlaced()
+                            winRate.doubleValue()
                     );
                 }
             }
@@ -114,26 +99,39 @@ public class Main {
             }
             writer.println("");
         } catch (IOException e) {
-            e.printStackTrace(); //todo read up on what this does exactly
+            e.printStackTrace();
         }
         Config.displayRunStatus("\nList of Illegitimate players written to file: OK");
     }
 
+    protected static void writeHostBalance(int hostBalance) {
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(Config.REPORT_FILE_PATH, true))) {
+                writer.printf("%d \n", hostBalance);
+                writer.println("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Config.displayRunStatus("\nBalance report written to file: OK");
+    }
+
+
 
     public static void main(String[] args) {
 
-        List<PlayerData> playerDataTransactions = readInPlayerData();
-        List<MatchData> matchOutcomes = readInMatchData();
-        List<PlayerAccount> playerAccounts =
-                PlayerAccount.initializeAccounts(playerDataTransactions); // Initialize accounts read
-        Transform transform = new Transform();
-        transform.processPlayerData(playerDataTransactions, playerAccounts, matchOutcomes);
+        HostBalance hostBalance;
 
+        List<PlayerData> playerDataTransactions = readInPlayerData(); // todo move  to Extract class
+        List<MatchData> matchOutcomes = readInMatchData();             // todo move to  Extract class
+        List<PlayerAccount> playerAccounts =
+                PlayerAccount.initializeAccounts(playerDataTransactions);
+        Transform transform = new Transform();
+
+        hostBalance = transform.processPlayerData(playerDataTransactions, playerAccounts, matchOutcomes);
         List<IllegitimatePlayers> illegitimatePlayers = IllegitimatePlayers.getIllegitimatePlayersList();
 
-        System.out.println("");
         writeActivePlayerAccounts(playerAccounts);
         writeIllegalPlayers(illegitimatePlayers);
-
+        writeHostBalance(hostBalance.getBalance());
     }
 }

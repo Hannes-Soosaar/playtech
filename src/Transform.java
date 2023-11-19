@@ -2,7 +2,7 @@ import java.util.List;
 
 public class Transform {
 
-    public void processPlayerData(List<PlayerData> playerDataList,
+    public HostBalance processPlayerData(List<PlayerData> playerDataList,
                                   List<PlayerAccount> playerAccountList,
                                   List<MatchData> matchDataList) {
 
@@ -26,11 +26,11 @@ public class Transform {
                     depositToPlayerAccount(playerAccountList, playerId, transactionAmount);
                     break;
                 default:
-                    Config.displayRunStatus("there is an Invalid Operatorion in the player_data file");
+                    Config.displayRunStatus("there is an Invalid Operation in the player_data file");
                     break;
             }
         }
-        generateHostBalance(playerAccountList, playerDataList, matchDataList);
+     return generateHostBalance(playerAccountList, playerDataList, matchDataList);
     }
 
     public void processBet(List<PlayerAccount> playerAccountList,
@@ -48,6 +48,8 @@ public class Transform {
                     playerAccount.updateBalance(
                             (int) Math.floor(match.getRateOfReturnSideA() * (double) playerData.getTransactionAmount())
                     );
+                    playerAccount.addBetsWon();
+
                 } else {
                     playerAccount.updateBalance(-playerData.getTransactionAmount());
                 }
@@ -57,6 +59,7 @@ public class Transform {
                     playerAccount.updateBalance(
                             (int) Math.floor(match.getRateOfReturnSideB() * (double) playerData.getTransactionAmount())
                     );
+                    playerAccount.addBetsWon();
                 } else {
                     playerAccount.updateBalance(-playerData.getTransactionAmount());
                 }
@@ -69,6 +72,7 @@ public class Transform {
                 break;
         }
         playerAccount.addABetPlaced();
+        playerAccount.updateWinRate(playerAccount.getBetsPlaced(),playerAccount.getBetsWon());
     }
 
     public void withdrawFromPlayerAccount(List<PlayerAccount> playerAccountList,
@@ -118,8 +122,8 @@ public class Transform {
                 return matchData;
             }
         }
-        Config.displayRunStatus("No matching games in Player_Data and Match_Data");
-        return null;
+
+        return new MatchData("", "", "", "");
     }
 
     public PlayerAccount findPlayerAccount(String playerId, List<PlayerAccount> playerAccountList) {
@@ -142,7 +146,7 @@ public class Transform {
             PlayerAccount playerAccount = findPlayerAccount(playerData.getPlayerId(), playerAccountList);
             int matchTotalAmount = 0;
             if (playerAccount.getIsActive()
-                    && playerAccount.getPlayerId().equals(playerData.getMatchId())
+                    && playerAccount.getPlayerId().equals(playerData.getPlayerId())
                     && playerData.getMatchId().equals(match.getMatchId())) {
 
                 switch (match.getMatchResult().toLowerCase()) {
@@ -167,10 +171,10 @@ public class Transform {
                         }
                         break;
                     case "darw":
-                        // do nothing but it is a valid input
+                        // do nothing, but it is a valid case.
                     default:
                         Config.displayRunStatus(
-                                "The match result is invalid, match case must be A, B or DRAW");
+                                "A deposti or Withdraw was made");
                         break;
                 }
             }
