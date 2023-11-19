@@ -8,15 +8,13 @@ public class Main {
         List<PlayerData> playerDataTransactions = extract.readInPlayerData();
         List<MatchData> matchOutcomes = extract.readInMatchData();
         List<PlayerAccount> playerAccountList =
-                PlayerAccount.initializeAccounts(playerDataTransactions);
-        
+                PlayerAccount.initializeAccounts(playerDataTransactions);        
         Transform transform = new Transform();
         HostBalance hostBalance = transform.processPlayerData(playerDataTransactions,
                 playerAccountList,
                 matchOutcomes);
         List<IllegitimatePlayers> illegitimatePlayerList =
                 IllegitimatePlayers.getIllegitimatePlayersList();
-
         WriteToFile.activePlayerAccounts(playerAccountList);
         WriteToFile.illegalPlayers(illegitimatePlayerList);
         WriteToFile.hostBalance(hostBalance.getBalance());
